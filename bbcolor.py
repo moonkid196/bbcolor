@@ -52,8 +52,7 @@ class bbcolor:
     def use_color(self, use):
         '''For the (dis)use of color
 
-use: True/False for whether to use color
-'''
+        use: True/False for whether to use color'''
 
         # Just making sure it get sets to a boolean
         if use:
