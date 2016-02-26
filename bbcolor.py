@@ -178,4 +178,4 @@ class bbcolor:
         if self._color:
             return '\033[%s;%s;%sm%s\033[0m' % (fg, bg, style, msg)
         else:
-            return '\033[%sm%s\033[0m' % (style, msg)
+            return msg
