@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 #
 # Bryan Burke
 # bburke@baburke.net
@@ -15,10 +15,10 @@ class BadColor(Exception):
 
 class bbcolor:
     '''Class to handle a single color-scheme/output
-    
+
     All set_* methods support resetting to defaults by calling the method with
     no arguments
-    
+
     Example use:
     >>> from bbcolor import bbcolor
     >>> bbc = bbcolor()
@@ -33,15 +33,15 @@ class bbcolor:
 
     def __init__(self, quiet=True):
         if not quiet:
-            print('+ Initializing bbcolor object')
+            sys.stdout.write('+ Initializing bbcolor object\n')
 
         if sys.stdout.isatty():
             if not quiet:
-                print('\033[38;5;112m+ Detected terminal, using color\033[0m')
+                sys.stdout.write('\033[38;5;112m+ Detected terminal, using color\033[0m\n')
             self._color = True
         else:
             if not quiet:
-                print('+ No terminal detected, not using color')
+                sys.stdout.write('+ No terminal detected, not using color\n')
             self._color = False
 
         self.set_fg()
@@ -62,7 +62,7 @@ class bbcolor:
 
     def set_fg(self, fg=None):
         '''Set a default foreground color
-        
+
         fg: Numeric (0-255) color to use'''
 
         if fg is None:
@@ -79,7 +79,7 @@ class bbcolor:
 
     def set_bg(self, bg=None):
         '''Set a default background color
-        
+
         bg: Numeric (0-255) color to use'''
 
         if bg is None:
@@ -128,26 +128,26 @@ class bbcolor:
 
         return ';'.join(lstyle)
 
-    def set_file(self, file=None):
+    def set_file(self, _file=None):
         '''Default output stream to use
-        
-        'file' should be a file-like object or None to reset to default'''
 
-        if file is None:
+        '_file' should be a file-like object or None to reset to default'''
+
+        if _file is None:
             self._file = self.__class__._file
         else:
-            self._file = file
+            self._file = _file
 
-    def pr(self, msg, fg=None, bg=None, style=None, file=None):
+    def pr(self, msg, fg=None, bg=None, style=None, _file=None):
         '''Function to print a message with the given attributes'''
 
         # Set defaults, if any
-        if file is None:
-            file = self._file
+        if _file is None:
+            _file = self._file
 
         s = self.format(msg, fg=fg, bg=bg, style=style)
 
-        print(s, file=file)
+        _file.write(s + '\n')
 
     def format(self, msg, fg=None, bg=None, style=None):
         '''Function to format a message with the given attributes'''
