@@ -54,45 +54,37 @@ class bbcolor:
 
         use: True/False for whether to use color'''
 
-        # Just making sure it get sets to a boolean
-        if use:
-            self._color = True
-        else:
-            self._color = False
+        assert type(use) == bool
 
-    def set_fg(self, fg=None):
+        self._color = use
+
+    def set_fg(self, foreground=None):
         '''Set a default foreground color
 
-        fg: Numeric (0-255) color to use'''
+        foreground: Numeric (0-255) color to use'''
 
-        if fg is None:
+        if foreground is None:
             self._fg = None
             return
 
-        if not self._color:
-            return
+        if foreground not in range(256):
+            raise BadColor('%s is not in [0, 255]' % str(foreground))
 
-        if fg not in range(256):
-            raise BadColor('%s is not in [0, 255]' % str(fg))
+        self._fg = foreground
 
-        self._fg = fg
-
-    def set_bg(self, bg=None):
+    def set_bg(self, background=None):
         '''Set a default background color
 
-        bg: Numeric (0-255) color to use'''
+        background: Numeric (0-255) color to use'''
 
-        if bg is None:
+        if background is None:
             self._bg = None
             return
 
-        if not self._color:
-            return
+        if background not in range(256):
+            raise BadColor('%s is not in [0, 255]' % str(background))
 
-        if bg not in range(256):
-            raise BadColor('%s is not in [0, 255]' % str(bg))
-
-        self._bg = bg
+        self._bg = background
 
     def set_style(self, style=None):
         '''Set a default style
@@ -128,54 +120,56 @@ class bbcolor:
 
         return ';'.join(lstyle)
 
-    def set_file(self, _file=None):
+    def set_file(self, out_file=None):
         '''Default output stream to use
 
-        '_file' should be a file-like object or None to reset to default'''
+        'out_file' should be a file-like object or None to reset to default'''
 
-        if _file is None:
+        if out_file is None:
             self._file = self.__class__._file
         else:
-            self._file = _file
+            self._file = out_file
 
-    def pr(self, msg, fg=None, bg=None, style=None, _file=None):
+    def pr(self, msg, foreground=None, background=None, style=None,
+            out_file=None):
         '''Function to print a message with the given attributes'''
 
         # Set defaults, if any
-        if _file is None:
+        if out_file is None:
             _file = self._file
 
-        s = self.format(msg, fg=fg, bg=bg, style=style)
+        out_str = self.format(msg, foreground=foreground, background=background,
+                style=style)
 
-        _file.write(s + '\n')
+        _file.write(out_str + '\n')
 
-    def format(self, msg, fg=None, bg=None, style=None):
+    def format(self, msg, foreground=None, background=None, style=None):
         '''Function to format a message with the given attributes'''
 
-        # Set defaults, if any
-        if fg is None:
-            fg = self._fg
+        if not self._color:
+            return msg
 
-        if bg is None:
-            bg = self._bg
+        # Set defaults, if any
+        if foreground is None:
+            foreground = self._fg
+
+        if background is None:
+            background = self._bg
 
         if style is None:
             style = self._style
 
         # Parse the actual values
-        if fg is None:
-            fg = '39'
+        if foreground is None:
+            foreground = '39'
         else:
-            fg = '38;5;%d' % fg
+            foreground = '38;5;%d' % foreground
 
-        if bg is None:
-            bg = '49'
+        if background is None:
+            background = '49'
         else:
-            bg = '48;5;%d' % bg
+            background = '48;5;%d' % background
 
         style = self._parse_style(style)
 
-        if self._color:
-            return '\033[%s;%s;%sm%s\033[0m' % (fg, bg, style, msg)
-        else:
-            return msg
+        return '\033[%s;%s;%sm%s\033[0m' % (foreground, background, style, msg)
