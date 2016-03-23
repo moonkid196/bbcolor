@@ -6,12 +6,14 @@ formal.
 
 ## Synopsys
 
-  >>> import bbcolor
-  >>> bbc = bbcolor.bbcolor()
-  >>> bbc.set_fd(160)
-  >>> bbc.set_bg(50)
-  >>> bbc.set_style('bold')
-  >>> bbc.pr('Hello, World!')
+```python
+import bbcolor
+bbc = bbcolor.bbcolor()
+bbc.set_fd(160)
+bbc.set_bg(50)
+bbc.set_style('bold')
+bbc.pr('Hello, World!')
+```
 
 For more detailed information, see the docstrings/inline-python help
 
