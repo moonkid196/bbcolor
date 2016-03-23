@@ -67,6 +67,8 @@ class bbcolor:
             self._fg = None
             return
 
+        assert type(foreground) == int
+
         if foreground not in range(256):
             raise BadColor('%s is not in [0, 255]' % str(foreground))
 
@@ -81,6 +83,8 @@ class bbcolor:
             self._bg = None
             return
 
+        assert type(background) == int
+
         if background not in range(256):
             raise BadColor('%s is not in [0, 255]' % str(background))
 
@@ -94,9 +98,11 @@ class bbcolor:
         discarded'''
 
         if style is None:
-            self._style = style
+            self._style = None
         else:
             self._style = str(style)
+
+        self._style_string = self._parse_style(self._style)
 
     def _parse_style(self, style):
         '''Parse a style string'''
@@ -157,7 +163,9 @@ class bbcolor:
             background = self._bg
 
         if style is None:
-            style = self._style
+            style = self._style_string
+        else:
+            style = self._parse_style(style)
 
         # Parse the actual values
         if foreground is None:
@@ -169,7 +177,5 @@ class bbcolor:
             background = '49'
         else:
             background = '48;5;%d' % background
-
-        style = self._parse_style(style)
 
         return '\033[%s;%s;%sm%s\033[0m' % (foreground, background, style, msg)
