@@ -8,7 +8,9 @@
 
 import sys
 
-'''Module for handling simple terminal coloring'''
+'''Module for handling simple terminal coloring
+
+mostly just a test repo now'''
 
 class BadColor(Exception):
     pass
